@@ -25,6 +25,12 @@ class CreateTransactionService {
     if (!title || !value || !type || !category)
       throw new AppError('This request is not valid.', 400);
 
+    if (
+      type === 'outcome' &&
+      (await transactionsRepository.getBalance()).total < value
+    )
+      throw new AppError('This balance not have value to outcome.', 400);
+
     const formatCategory = category.trim().toUpperCase();
     const checkIfCategoryExists = await categoryRepository.findOne({
       where: { title: formatCategory },
@@ -34,10 +40,9 @@ class CreateTransactionService {
       const newCategory = await categoryRepository.create({
         title: formatCategory,
       });
-      categoryRepository.save(newCategory);
-      category_id = newCategory.id;
+      const { id } = await categoryRepository.save(newCategory);
+      category_id = id;
     } else category_id = checkIfCategoryExists.id;
-
     const transaction = await transactionsRepository.create({
       title,
       value,

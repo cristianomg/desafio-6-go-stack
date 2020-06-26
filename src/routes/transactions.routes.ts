@@ -9,9 +9,7 @@ const transactionController = new TransactionController();
 
 const transactionsRouter = Router();
 
-transactionsRouter.get('/', async (request, response) => {
-  // TODO
-});
+transactionsRouter.get('/', transactionController.index);
 
 transactionsRouter.post('/', transactionController.create);
 

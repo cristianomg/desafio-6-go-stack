@@ -50,7 +50,7 @@ class CreateTransactionService {
       category_id: checkIfCategoryExists?.id ?? newCategoryId,
     });
 
-    transactionsRepository.save(transaction);
+    await transactionsRepository.save(transaction);
     return transaction;
   }
 }

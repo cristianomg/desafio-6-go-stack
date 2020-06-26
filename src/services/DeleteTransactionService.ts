@@ -8,13 +8,11 @@ class DeleteTransactionService {
   public async execute(transactionId: string): Promise<void> {
     if (!transactionId) throw new AppError('This id is not valid.', 400);
     const transactionRepo = getCustomRepository(TransactionsRepository);
-    const transaction = await transactionRepo.find({
+    const transaction = await transactionRepo.findOne({
       where: { id: transactionId },
     });
-
     if (!transaction) throw new AppError('This transaction not found.');
-
-    transactionRepo.remove(transaction);
+    await transactionRepo.remove(transaction);
   }
 }
 
